@@ -1,0 +1,30 @@
+################################################################################
+################ 네이버 영화 리뷰 스크래핑_인셉션 ###############################
+################################################################################
+setwd("D:/") #워크디렉토리 설정
+
+install.packages(c('httr','rvest','stringr','tm','sna','xml2')) #관련 패키지 다운로드
+
+library(httr); library(rvest); library(stringr); library(tm); library(sna); library(xml2) #라이브러리로 업로드
+
+all.reviews <- c() #리뷰 저장공간_만들기_1
+reviews <- c() #리뷰 저장공간_만들기_2
+
+#10 page loop
+for(i in 1:10) {
+  url <- paste0("https://movie.naver.com/movie/point/af/list.nhn?st=mcode&sword=52515&target=&page=",i)
+  res <- GET(url) #이 과정을 거쳐야 원활하게 되더라구요~ Get 방식 , post 방식
+  #https://statkclee.github.io/yonsei/data/R_Web_Crawling.pdf
+  h <- read_html(res, encoding = "CP949") #한글 처리할 때 늘 만나는 문제(인코딩: https://studyforus.tistory.com/167 )
+  table <- html_nodes(h, '.list_netizen') #리뷰가 있는 위치 찾아 들어가기
+  content <- html_nodes(table, '.title')
+  reviews <- html_text(content) #실제 리뷰의 text 파일만 추출
+  if( length(reviews) == 0 ){ break }
+  reviews <- str_trim(reviews) #앞뒤 공백문자 제거
+  all.reviews <- c(all.reviews, reviews) #결과값 저장
+  print(i)
+}
+
+all.reviews #잘 들어왔나 확인
+
+write.table(all.reviews, 'Inception.txt') #txt 파일로 저장하기

@@ -27,4 +27,4 @@ for(i in 1:10) {
 
 all.reviews #잘 들어왔나 확인
 
-write.table(all.reviews, 'wonder_1984.txt') #txt 파일로 저장하기
+write.table(all.reviews, 'Guardians1.txt') #txt 파일로 저장하기
